@@ -17,9 +17,11 @@ BINDIR = bin
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
 
+OPTIMIZATION = -Os
+
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -Os -std=gnu99 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 $(OPTIMIZATION) -std=gnu99 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(BUILDDIR)/$(*F).o -MF dep/$(@F).d -DF_CPU=$(F_CPU)
 
 ## Assembly specific flags
@@ -41,7 +43,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = main.o
+OBJECTS = main.o uart.o
 PATH_OBJECTS = $(patsubst %.o, $(BUILDDIR)/%.o, $(OBJECTS))
 
 ## Objects explicitly added by the user
@@ -56,9 +58,11 @@ all: init $(FILES) size
 main.o: $(SRCDIR)/main.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDDIR)/$@
 
+uart.o: $(SRCDIR)/uart.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $(BUILDDIR)/$@
+
 ##Link
 $(TARGET): $(OBJECTS)
-	/bin/pwd
 	$(CC) $(LDFLAGS) $(PATH_OBJECTS) $(LINKONLYOBJECTS) $(LIBDIRS) $(LIBS) -o $(BUILDDIR)/$(TARGET)
 	cp $(BUILDDIR)/$(TARGET) $(BINDIR)/$(TARGET)
 

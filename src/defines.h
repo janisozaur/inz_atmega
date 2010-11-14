@@ -1,0 +1,1 @@
+#define UART_BAUD 38400
