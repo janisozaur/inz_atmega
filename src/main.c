@@ -11,6 +11,8 @@
 #define PIN_LEFT PB4
 #define PIN_RIGHT PB5
 
+#define DELAY 13
+
 volatile uint8_t ovfCounter;
 uint8_t prevPin;
 FILE uart_str = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
@@ -100,7 +102,7 @@ int main() {
 		uart_putchar(0xFF, NULL);
 		// end blue
 
-		_delay_ms(13);
+		_delay_ms(DELAY);
 
 		// yellow
 		ovfCounter = 0;
@@ -152,6 +154,6 @@ int main() {
 		uart_putchar(0xFF, NULL);
 		// end yellow
 
-		_delay_ms(13);
+		_delay_ms(DELAY);
 	}
 }
