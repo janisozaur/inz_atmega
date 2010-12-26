@@ -122,7 +122,7 @@ int main() {
 		SFIOR |= _BV(PSR10);
 		// prescaler: clk/8
 		TCCR0 = _BV(CS01);
-		PORTB &= ~_BV(0);
+		PORTD &= ~_BV(2);
 		steady = 0;
 		do {
 			uint8_t currentPin = PINB;
@@ -147,7 +147,7 @@ int main() {
 		// stop timer/counter0
 		TCCR0 = 0x00;
 		blink();
-		PORTB |= _BV(0);
+		PORTD |= _BV(2);
 		uart_putchar(2, NULL);
 		uart_putchar(tcntU, NULL);
 		uart_putchar(coeffU, NULL);
