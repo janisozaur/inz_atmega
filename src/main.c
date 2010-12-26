@@ -82,6 +82,7 @@ int main() {
 				++steady;
 			}
 			prevPin = currentPin;
+		// gether this many samples prior to considering them a stable result
 		} while (steady < 3);
 		// stop timer/counter0
 		TCCR0 = 0x00;
