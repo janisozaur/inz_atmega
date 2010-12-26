@@ -43,6 +43,10 @@ ISR(TIMER1_OVF_vect) {
 	}
 }
 
+inline void blink() {
+	PORTB ^= _BV(1);
+}
+
 int main() {
 	uart_init();
 	_delay_ms(3000);
@@ -90,7 +94,7 @@ int main() {
 		} while (steady < 3);
 		// stop timer/counter0
 		TCCR0 = 0x00;
-		PORTB ^= _BV(1);
+		blink();
 		PORTB |= _BV(0);
 		uart_putchar(1, NULL);
 		uart_putchar(tcntU, NULL);
@@ -142,7 +146,7 @@ int main() {
 		} while (steady < 3);
 		// stop timer/counter0
 		TCCR0 = 0x00;
-		PORTB ^= _BV(1);
+		blink();
 		PORTB |= _BV(0);
 		uart_putchar(2, NULL);
 		uart_putchar(tcntU, NULL);
