@@ -43,8 +43,12 @@ ISR(TIMER1_OVF_vect) {
 	}
 }
 
-inline void blink() {
+inline void blink_blue() {
 	PORTB ^= _BV(1);
+}
+
+inline void blink_yellow() {
+	PORTD ^= _BV(3);
 }
 
 int main() {
@@ -94,7 +98,7 @@ int main() {
 		} while (steady < 3);
 		// stop timer/counter0
 		TCCR0 = 0x00;
-		blink();
+		blink_blue();
 		PORTB |= _BV(0);
 		uart_putchar(1, NULL);
 		uart_putchar(tcntU, NULL);
@@ -146,7 +150,7 @@ int main() {
 		} while (steady < 3);
 		// stop timer/counter0
 		TCCR0 = 0x00;
-		blink();
+		blink_yellow();
 		PORTD |= _BV(2);
 		uart_putchar(2, NULL);
 		uart_putchar(tcntU, NULL);
