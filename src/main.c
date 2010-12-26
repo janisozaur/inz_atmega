@@ -51,6 +51,8 @@ int main() {
 	TIMSK |= _BV(TOIE0) | _BV(TOIE1);
 	sei();
 	while (1) {
+
+		// blue
 		ovfCounter = 0;
 		TCNT0 = 0;
 		prevPin = 0xFF;
@@ -88,9 +90,7 @@ int main() {
 		TCCR0 = 0x00;
 		PORTB ^= _BV(1);
 		PORTB |= _BV(0);
-		uart_putchar(0, NULL);
-		//uart_putchar(1, NULL);
-		//uart_putchar(2, NULL);
+		uart_putchar(1, NULL);
 		uart_putchar(tcntU, NULL);
 		uart_putchar(coeffU, NULL);
 		uart_putchar(tcntL, NULL);
@@ -98,6 +98,60 @@ int main() {
 		uart_putchar(tcntR, NULL);
 		uart_putchar(coeffR, NULL);
 		uart_putchar(0xFF, NULL);
-		_delay_ms(20);
+		// end blue
+
+		_delay_ms(13);
+
+		// yellow
+		ovfCounter = 0;
+		TCNT0 = 0;
+		prevPin = 0xFF;
+		tcntU = 0xFF;
+		coeffU = 0xFF;
+		tcntL = 0xFF;
+		coeffL = 0xFF;
+		tcntR = 0xFF;
+		coeffR = 0xFF;
+		// reset prescaler
+		SFIOR |= _BV(PSR10);
+		// prescaler: clk/8
+		TCCR0 = _BV(CS01);
+		PORTB &= ~_BV(0);
+		steady = 0;
+		do {
+			uint8_t currentPin = PINB;
+			if (((prevPin & _BV(PIN_LEFT)) != 0) && ((currentPin & _BV(PIN_LEFT)) == 0)) {
+				tcntL = TCNT0;
+				coeffL = ovfCounter;
+			}
+			if (((prevPin & _BV(PIN_RIGHT)) != 0) && ((currentPin & _BV(PIN_RIGHT)) == 0)) {
+				tcntR = TCNT0;
+				coeffR = ovfCounter;
+			}
+			if (((prevPin & _BV(PIN_UP)) != 0) && ((currentPin & _BV(PIN_UP)) == 0)) {
+				tcntU = TCNT0;
+				coeffU = ovfCounter;
+			}
+			if ((prevPin & (_BV(PIN_UP) | _BV(PIN_LEFT) | _BV(PIN_RIGHT))) == 0) {
+				++steady;
+			}
+			prevPin = currentPin;
+		// gether this many samples prior to considering them a stable result
+		} while (steady < 3);
+		// stop timer/counter0
+		TCCR0 = 0x00;
+		PORTB ^= _BV(1);
+		PORTB |= _BV(0);
+		uart_putchar(2, NULL);
+		uart_putchar(tcntU, NULL);
+		uart_putchar(coeffU, NULL);
+		uart_putchar(tcntL, NULL);
+		uart_putchar(coeffL, NULL);
+		uart_putchar(tcntR, NULL);
+		uart_putchar(coeffR, NULL);
+		uart_putchar(0xFF, NULL);
+		// end yellow
+
+		_delay_ms(13);
 	}
 }
