@@ -56,6 +56,7 @@ int main() {
 	_delay_ms(3000);
 	fprintf(&uart_str, "hello\n");
 	DDRB = 0x07;
+	DDRD |= 0x0C;
 	// 16-bit counter, up-counting to 0xFFFF and overflowing, without prescaler
 	TCCR1B = _BV(CS10);
 	TIMSK |= _BV(TOIE0) | _BV(TOIE1);
